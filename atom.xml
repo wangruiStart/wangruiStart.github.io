@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://wangruistart.github.io</id>
     <title>水云间</title>
-    <updated>2019-06-18T09:20:13.597Z</updated>
+    <updated>2019-06-18T09:31:01.506Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://wangruistart.github.io"/>
     <link rel="self" href="https://wangruistart.github.io/atom.xml"/>
@@ -89,8 +89,8 @@ if (target.addEventListener) {
 <li>所有事件绑定在document上</li>
 <li>所以事件触发的都是ReactEventListener的dispatch方法</li>
 </ul>
-<p>##回调储存
-看到这边你可能疑惑，所有回调都执行的ReactEventListener的dispatch方法，那我写的回调干嘛去了。别急，接着看：</p>
+<h2 id="回调储存">回调储存</h2>
+<p>看到这边你可能疑惑，所有回调都执行的ReactEventListener的dispatch方法，那我写的回调干嘛去了。别急，接着看：</p>
 <pre><code class="language-js">function enqueuePutListener(inst, registrationName, listener, transaction) {
   ...
   //注意这里！！！！！！！！！
@@ -136,9 +136,9 @@ var EventPluginHub = {
 </code></pre>
 <p>EventPluginHub在每个项目中只实例化一次。也就是说，项目组所有事件的回调都会储存在唯一的listenerBank中。</p>
 <p>是不是有点晕，放上流程图，仔细回忆一下
-<img src="media/15066495898322/15066527340399.jpg" alt=""></p>
-<p>##事件触发
-注册事件时我们说过，所有的事件都是绑定在Document上。回调统一是ReactEventListener的dispatch方法。
+<img src="https://wangruistart.github.io/post-images/1560850252970.png" alt=""></p>
+<h2 id="事件触发">事件触发</h2>
+<p>注册事件时我们说过，所有的事件都是绑定在Document上。回调统一是ReactEventListener的dispatch方法。
 由于冒泡机制，无论我们点击哪个DOM，最后都是由document响应（因为其他DOM根本没有事件监听）。也即是说都会触发<code>dispatch</code></p>
 <pre><code class="language-js">dispatchEvent: function(topLevelType, nativeEvent) {
     //实际触发事件的DOM对象
@@ -193,8 +193,8 @@ handleTopLevel: function (topLevelType, targetInst, nativeEvent, nativeEventTarg
     runEventQueueInBatch(events);
   }
 </code></pre>
-<p>###事件封装
-首先是<code>EventPluginHub</code>的<code>extractEvents</code></p>
+<h3 id="事件封装">事件封装</h3>
+<p>首先是<code>EventPluginHub</code>的<code>extractEvents</code></p>
 <pre><code class="language-js">extractEvents: function (topLevelType, targetInst, nativeEvent, nativeEventTarget) {
     var events;
     var plugins = EventPluginRegistry.plugins;
@@ -275,8 +275,8 @@ function accumulateDirectionalDispatches(inst, phase, event) {
 <li>将有eventType属性的ReactElement放入 event._dispatchInstances</li>
 <li>将对应的回调依次放入event._dispatchListeners</li>
 </ul>
-<p>###事件分发
-<code>runEventQueueInBatch</code>主要进行了两步操作</p>
+<h3 id="事件分发">事件分发</h3>
+<p><code>runEventQueueInBatch</code>主要进行了两步操作</p>
 <pre><code class="language-js">function runEventQueueInBatch(events) {
 //将event事件加入processEventQueue序列
   EventPluginHub.enqueueEvents(events);
@@ -358,8 +358,8 @@ function accumulateDirectionalDispatches(inst, phase, event) {
       fakeNode.removeEventListener(evtType, boundFunc, false);
     };
 </code></pre>
-<p>##总体流程
-<img src="media/15066495898322/15066663846149.jpg" alt=""></p>
+<h2 id="总体流程">总体流程</h2>
+<p><img src="https://wangruistart.github.io/post-images/1560850227424.png" alt=""></p>
 <p>不难发现，我们经历了从真实DOM到Virtual DOM的来回转化。</p>
 <p>##常见问题的答案。</p>
 <ol>
